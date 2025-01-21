@@ -11,6 +11,7 @@ app.on('ready', () => {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
     },
+    icon: path.join(__dirname, 'assets/icons/Logo.ico'),
   });
 
   mainWindow.loadFile('./dist/index.html');
