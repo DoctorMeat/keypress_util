@@ -1,57 +1,32 @@
 <template>
-  <div @keydown="logKeyPress" @keyup="logKeyPress" tabindex="0">
-    <h1>Key Press Logger</h1>
-    <p>Press any key to see the log below:</p>
-    <ul>
-      <li v-for="(entry, index) in keyLogs" :key="index">
-        {{ entry }}
-      </li>
-    </ul>
+  <div id="app">
+    <img alt="Key logo" src="./assets/logo.png">
+    <KeyPress/>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
+import KeyPress from './components/KeyPress.vue';
 
 export default {
-  setup() {
-    const keyLogs = ref([]); // Reactive variable to store key logs
-
-    const logKeyPress = (event) => {
-      let key = event.key; // Get the key pressed
-      if (key === " ") {
-        key = "Spacebar"; // Replace space key with "Spacebar"
-      }
-      const logEntry = `${key} (${event.type})`; // Add the event type (keydown or keyup)
-      keyLogs.value.push(logEntry); // Add the entry to the logs
-      if (keyLogs.value.length > 10) {
-        // Limit the log size to 10 entries
-        keyLogs.value.shift();
-      }
-    };
-
-    return {
-      keyLogs, // Expose reactive variable to the template
-      logKeyPress, // Expose the method
-    };
+  name: 'App',
+  components: {
+    KeyPress,
   },
 };
 </script>
 
 <style>
-/* Add some basic styling */
-div {
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  margin: 50px;
+  color: #2c3e50;
+  margin-top: 60px;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin: 5px 0;
-  font-family: monospace;
+img {
+  height: 150px
 }
 </style>

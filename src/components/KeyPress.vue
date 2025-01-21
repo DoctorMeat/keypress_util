@@ -1,10 +1,10 @@
 <template>
-  <div @keydown="logKeyPress" tabindex="0">
+  <div>
     <h1>Key Press Logger</h1>
     <p>Press any key to see the log below:</p>
     <ul>
-      <li v-for="(key, index) in keyLogs" :key="index">
-        {{ key }}
+      <li v-for="(entry, index) in keyLogs" :key="index">
+        {{ entry }}
       </li>
     </ul>
   </div>
@@ -18,8 +18,12 @@ export default {
     const keyLogs = ref([]); // Reactive variable to store key logs
 
     const logKeyPress = (event) => {
-      const key = event.key; // Capture the key pressed
-      keyLogs.value.push(key); // Add the key to the logs
+      let key = event.key; // Get the key pressed
+      if (key === " ") {
+        key = "Spacebar"; // Replace space key with "Spacebar"
+      }
+      const logEntry = `${key} (${event.type})`; // Add the event type (keydown or keyup)
+      keyLogs.value.push(logEntry); // Add the entry to the logs
       if (keyLogs.value.length > 10) {
         // Limit the log size to 10 entries
         keyLogs.value.shift();
@@ -27,25 +31,25 @@ export default {
     };
 
     onMounted(() => {
-      // Register the global keydown event listener
+      // Register global keydown and keyup listeners
       window.addEventListener("keydown", logKeyPress);
+      window.addEventListener("keyup", logKeyPress);
     });
 
     onBeforeUnmount(() => {
-      // Clean up the listener
+      // Remove global listeners when component is unmounted
       window.removeEventListener("keydown", logKeyPress);
+      window.removeEventListener("keyup", logKeyPress);
     });
 
     return {
       keyLogs, // Expose reactive variable to the template
-      logKeyPress, // Expose the method (in case you want to use it locally)
     };
   },
 };
 </script>
 
 <style>
-/* Add some basic styling */
 div {
   text-align: center;
   margin: 50px;
@@ -55,9 +59,10 @@ ul {
   list-style: none;
   padding: 0;
 }
-
+ 
 li {
   margin: 5px 0;
   font-family: monospace;
 }
+
 </style>
